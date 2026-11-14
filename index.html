@@ -412,7 +412,7 @@ function lose(){
 }
 $('play').onclick=()=>start(nextUp());
 $('jam').onclick=()=>start(Math.max(0,nextUp()-(save.s[nextUp()]?0:1)),true);
-$('swap').onclick=()=>{let i=G.i;do{i=(i+1)%ALBUMS.length}while(!unlocked(i));start(i,true)};
+$('swap').onclick=()=>start((G.i+1)%ALBUMS.length,true);
 $('back').onclick=goHome;$('ovHome').onclick=goHome;
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&G)goHome()});
 
