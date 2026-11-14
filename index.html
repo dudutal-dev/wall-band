@@ -33,7 +33,7 @@ button:focus-visible{outline:3px solid var(--neon);outline-offset:3px}
 .screen{height:100%;max-width:460px;margin:0 auto;display:flex;flex-direction:column;gap:10px;padding-block:12px;position:relative;z-index:1}
 
 /* home */
-.logo{font-family:var(--display);font-weight:700;font-size:clamp(60px,21vw,100px);line-height:.8;margin:14px 0 0;
+.logo{font-family:var(--display);font-weight:700;font-size:clamp(48px,16vw,76px);line-height:.85;margin:4px 0 0;
   text-shadow:0 0 22px var(--neon-soft),0 0 2px var(--neon),0 2px 0 var(--ink)}
 .sub{color:var(--paper);margin:0;line-height:1.45;max-width:31ch;text-shadow:0 1px 4px var(--ink)}
 .shelf{flex:1;min-height:0;overflow-y:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:18px 12px;align-content:start;padding-top:6px}
@@ -64,7 +64,7 @@ button:focus-visible{outline:3px solid var(--neon);outline-offset:3px}
 .lives b{width:16px;height:16px;border-radius:50%;background:radial-gradient(circle,var(--neon) 0 28%,var(--ink) 30%);border:1px solid var(--muted)}
 .lives b.gone{opacity:.2}
 .stage{position:relative;display:flex;flex-direction:column;align-items:center;gap:4px}
-#say{margin:0;font-family:var(--display);font-size:38px;line-height:1;min-height:38px;text-shadow:0 2px 8px var(--ink)}
+#say,#say2{margin:0;font-family:var(--display);font-size:38px;line-height:1;min-height:38px;text-shadow:0 2px 8px var(--ink)}
 #deck{width:min(62vw,31vh,270px);aspect-ratio:1;display:block}
 #judge{position:absolute;top:50%;left:0;right:0;text-align:center;font-family:var(--display);font-weight:700;font-size:64px;line-height:1;
   pointer-events:none;opacity:0;text-shadow:0 0 18px var(--neon),0 3px 0 var(--ink)}
@@ -86,6 +86,26 @@ button:focus-visible{outline:3px solid var(--neon);outline-offset:3px}
 .pad.on{transform:scale(1.08);filter:brightness(1.25) drop-shadow(0 0 18px var(--glow))}
 .pad.on .open{display:block}.pad.on .shut{display:none}
 
+/* studio */
+.sec{grid-column:1/-1;font-family:var(--display);font-size:28px;line-height:1;margin:4px 0 -8px;font-weight:700;text-shadow:0 2px 6px var(--ink)}
+.sec small{font-family:var(--body);font-size:12px;font-weight:400;color:var(--muted);margin-inline-start:6px}
+.sleeve.plus{display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:60px;line-height:1;
+  border:2px dashed var(--muted);background:var(--veil);box-shadow:none}
+#deck2{width:min(50vw,23vh,220px);aspect-ratio:1;display:block}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;direction:ltr;height:82px}
+.tab{opacity:.6}.tab.has{opacity:1}
+.tab.sel span{background:var(--glow);color:var(--ink);font-weight:700}
+.ctl{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.spads{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:8px;direction:ltr}
+.npad{min-height:0;border-radius:20px;background:var(--glow);border:4px solid var(--ink);color:var(--ink);font-family:var(--display);font-weight:700;font-size:30px;
+  filter:brightness(var(--b));box-shadow:0 5px 0 var(--ink);transition:transform .06s,filter .06s}
+.npad.on{transform:translateY(4px) scale(.98);filter:brightness(1.5);box-shadow:0 1px 0 var(--ink)}
+#songName{font:inherit;font-size:20px;text-align:center;width:100%;padding:10px 12px;border-radius:12px;border:2px solid var(--neon);background:var(--ink);color:var(--paper);
+  -webkit-user-select:text;user-select:text}
+#card{background:var(--veil)}
+#card .card{background:var(--veil-strong);padding:20px;border-radius:18px}
+.card .row{width:100%;justify-content:center;flex-wrap:wrap}
+
 /* overlay */
 .over{position:fixed;inset:0;z-index:5;background:var(--veil-strong);display:flex;align-items:center;justify-content:center;
   padding:24px max(24px,env(safe-area-inset-right,0px)) 24px max(24px,env(safe-area-inset-left,0px))}
@@ -102,11 +122,11 @@ button:focus-visible{outline:3px solid var(--neon);outline-offset:3px}
 <canvas id="bg" aria-hidden="true"></canvas>
 
 <main class="screen" id="home">
-  <h1 class="logo">להקת<br>הקיר</h1>
-  <p class="sub">הלהקה מנגנת ריף על הקצב, ואתם עונים לה באותו קצב. ריף נקי מוסיף תקליט למדף.</p>
+  <h1 class="logo">להקת הקיר</h1>
+  <p class="sub">בנו שיר שכבה אחרי שכבה, הדפיסו אותו לוויניל, ושימו על המדף.</p>
   <div class="shelf" id="shelf"></div>
   <div class="row">
-    <button class="cta" id="play">לנגן</button>
+    <button class="cta" id="studioBtn">לאולפן</button>
     <button class="alt" id="jam">ג׳אם חופשי</button>
   </div>
 </main>
@@ -133,6 +153,26 @@ button:focus-visible{outline:3px solid var(--neon);outline-offset:3px}
   <div class="band" id="band"></div>
 </main>
 
+<main class="screen" id="studio" hidden>
+  <div class="hud">
+    <button class="ghost" id="sBack">למדף</button>
+    <div class="name"><h2>האולפן</h2></div>
+    <button class="chip" id="sPress">הדפסה לוויניל</button>
+  </div>
+  <div class="stage">
+    <p id="say2" aria-live="polite"></p>
+    <canvas id="deck2" aria-hidden="true"></canvas>
+    <div class="ctl"><button class="chip" id="sStyle"></button></div>
+  </div>
+  <div class="tabs" id="tabs"></div>
+  <div class="ctl">
+    <button class="chip" id="sKit"></button>
+    <button class="chip" id="sUndo">ביטול צליל</button>
+    <button class="chip" id="sClear">ניקוי שכבה</button>
+  </div>
+  <div class="spads" id="spads"></div>
+</main>
+
 <div class="over" id="over" hidden>
   <div class="card">
     <h3 id="ovTitle"></h3>
@@ -141,6 +181,26 @@ button:focus-visible{outline:3px solid var(--neon);outline-offset:3px}
     <p id="ovText"></p>
     <button class="cta" id="ovMain"></button>
     <button class="ghost" id="ovHome">חזרה למדף</button>
+  </div>
+</div>
+<div class="over" id="press" hidden>
+  <div class="card">
+    <h3>הדפסה לוויניל</h3>
+    <div class="sleeve" id="pressSleeve"></div>
+    <p>העטיפה צוירה מתוך מה שניגנתם. איך קוראים לתקליט?</p>
+    <input id="songName" maxlength="22" autocomplete="off" aria-label="שם התקליט">
+    <button class="cta" id="pressOk">להוסיף למדף</button>
+    <button class="ghost" id="pressBack">להמשיך לנגן</button>
+  </div>
+</div>
+<div class="over" id="card" hidden>
+  <div class="card">
+    <h3 id="cardTitle"></h3>
+    <div class="sleeve" id="cardSleeve"></div>
+    <p id="cardInfo"></p>
+    <button class="cta" id="cardPlay"></button>
+    <div class="row"><button class="chip" id="cardEdit">לערוך באולפן</button><button class="chip" id="cardDel"></button></div>
+    <button class="ghost" id="cardBack">חזרה למדף</button>
   </div>
 </div>
 <canvas id="fx" aria-hidden="true"></canvas>
@@ -182,8 +242,9 @@ function cover(i){
 }
 
 /* ---------- saved progress ---------- */
-let save={s:{},b:{}};
+let save={s:{},b:{},my:[]};
 try{const j=JSON.parse(localStorage.getItem('wallband2')||'null');if(j&&j.s)save=j}catch(e){}
+if(!Array.isArray(save.my))save.my=[];
 const persist=()=>{try{localStorage.setItem('wallband2',JSON.stringify(save))}catch(e){}};
 const unlocked=i=>i===0||save.s[i-1]>0;
 const nextUp=()=>{const i=ALBUMS.findIndex((_,k)=>!save.s[k]);return i<0?ALBUMS.length-1:i};
@@ -227,10 +288,10 @@ const I={
   clap(t,v){const d=out(v,0,.3);[0,.012,.026].forEach(o=>{const g=env(t+o,.001,.07);nz(t+o,.08,'bandpass',1300,1.2).connect(g);g.connect(d)})},
   bass(t,m,v,len){len=len||.32;const f=F(m+12),lp=filt('lowpass',1500),g=env(t,.005,len);lp.frequency.setValueAtTime(1500,t);lp.frequency.exponentialRampToValueAtTime(380,t+len);
     osc('sawtooth',f,t,len,lp);osc('square',f/2,t,len,lp);lp.connect(g);g.connect(out(v))},
-  guitar(t,m,v,a){const pre=ac.createGain(),ws=ac.createWaveShaper(),lp=filt('lowpass',3200),g=env(t,.004,a.glen);pre.gain.value=a.drive*.35;ws.curve=shape;
-    [m+12,m+19,m+24].forEach((n,k)=>{osc('sawtooth',F(n),t,a.glen,pre,k?6:-6)});pre.connect(ws);ws.connect(lp);lp.connect(g);g.connect(out(v/Math.sqrt(a.drive+.4),a.dly*.6,a.rev))},
-  keys(t,m,v,a,third){
-    const notes=[m+24,m+24+third,m+31],d=out(v,a.dly,a.rev);
+  guitar(t,m,v,a,ns){const pre=ac.createGain(),ws=ac.createWaveShaper(),lp=filt('lowpass',3200),g=env(t,.004,a.glen);pre.gain.value=a.drive*.35;ws.curve=shape;
+    (ns||[m+12,m+19,m+24]).forEach((n,k)=>{osc('sawtooth',F(n),t,a.glen,pre,k?6:-6)});pre.connect(ws);ws.connect(lp);lp.connect(g);g.connect(out(v/Math.sqrt(a.drive+.4),a.dly*.6,a.rev))},
+  keys(t,m,v,a,third,ns){
+    const notes=ns||[m+24,m+24+third,m+31],d=out(v,a.dly,a.rev);
     if(a.keys==='synth'){const lp=filt('lowpass',600),g=env(t,.03,1.1);lp.frequency.setValueAtTime(600,t);lp.frequency.exponentialRampToValueAtTime(3200,t+.12);lp.frequency.exponentialRampToValueAtTime(700,t+1);
       notes.forEach(n=>{osc('sawtooth',F(n),t,1.1,lp,8);osc('square',F(n),t,1.1,lp,-8)});lp.connect(g);g.connect(d)}
     else if(a.keys==='brass'){const lp=filt('lowpass',400),g=env(t,.02,.3);lp.frequency.setValueAtTime(400,t);lp.frequency.exponentialRampToValueAtTime(2800,t+.05);lp.frequency.exponentialRampToValueAtTime(900,t+.3);
@@ -268,13 +329,14 @@ function stopEngine(){if(E){clearInterval(E.timer);E=null}}
 function tick(){
   while(E&&E.next<ac.currentTime+.12){
     const s=E.step;
-    if(s===0){E.barStart=E.next;onBar(E.bar,E.barStart);if(!E)return}
+    if(s===0){E.barStart=E.next;E.cb=E.bar;onBar(E.bar,E.barStart);if(!E)return}
     groove(s,E.barStart+offs(E.a,s)*E.e);
     if(++E.step===8){E.step=0;E.bar++}
     E.next=E.barStart+(E.step||8)*E.e;
   }
 }
 function groove(s,t){
+  if(G.studio)return studioStep(s,t);
   const a=E.a,m=a.root+E.chord[0],quiet=G.mode==='end';
   if(quiet)return;
   if(a.k.includes(s))I.kick(t,.34);
@@ -287,6 +349,7 @@ function groove(s,t){
 }
 function onBar(bar,t){
   const a=E.a;E.chord=a.prog[bar%a.prog.length];
+  if(G.studio){ui(t,()=>{V.barStart=t});return}
   if(G.jam){G.mode='solo';if(bar===0)ui(t,()=>{V={mode:'solo'};say('נגנו מה שבא')});return}
   const prev=G.mode;let m;
   if(prev==='pre')m='intro';
@@ -354,21 +417,32 @@ PADN.forEach((label,i)=>{
   $('band').appendChild(b);pads.push(b);
 });
 function flashPad(p){const b=pads[p];b.classList.add('on');clearTimeout(b._t);b._t=setTimeout(()=>b.classList.remove('on'),170)}
-function beat(){beatPulse=1;if(reduce)return;pads.forEach(b=>b.firstChild.animate([{transform:'translateY(0)'},{transform:'translateY(-3%)'},{transform:'translateY(0)'}],{duration:170}))}
+function beat(){beatPulse=1;if(reduce)return;pads.concat(tabs).forEach(b=>b.firstChild.animate([{transform:'translateY(0)'},{transform:'translateY(-3%)'},{transform:'translateY(0)'}],{duration:170}))}
 
 /* ---------- screens ---------- */
-const say=t=>$('say').textContent=t;
+const say=t=>{$('say').textContent=t;$('say2').textContent=t};
 function pop(t,cls){const j=$('judge');j.textContent=t;j.className='';void j.offsetWidth;j.className='pop '+(cls||'')}
 function renderShelf(){
-  $('shelf').innerHTML='';
+  const sh=$('shelf');sh.innerHTML='<h2 class="sec">התקליטים שלי</h2>';
+  const add=document.createElement('button');add.className='slot';
+  add.innerHTML=`<span class="sleeve plus">+</span><span class="genre">${save.draft?'להמשיך סשן':'תקליט חדש'}</span><span class="stars"></span>`;
+  add.onclick=enterStudio;sh.appendChild(add);
+  save.my.forEach((p,i)=>{
+    const s=document.createElement('button');s.className='slot';
+    s.innerHTML=`<span class="sleeve">${songCover(unpack(p))}<b></b></span><span class="genre">${ALBUMS[unpack(p).st].genre}</span><span class="stars"></span>`;
+    s.querySelector('b').textContent=p.n;s.onclick=()=>openCard(i);sh.appendChild(s);
+  });
+  const h=document.createElement('h2');h.className='sec';h.innerHTML='חזרות עם הלהקה <small>כל חזרה פותחת סגנון לאולפן</small>';sh.appendChild(h);
   ALBUMS.forEach((a,i)=>{
     const ok=unlocked(i),s=document.createElement('button');s.className='slot'+(ok?'':' locked');s.disabled=!ok;
     s.innerHTML=`<span class="sleeve">${cover(i)}</span><span class="genre">${a.genre}</span><span class="stars">${ok?starStr(save.s[i]||0):'נעול'}</span>`;
-    s.onclick=()=>start(i);$('shelf').appendChild(s);
+    s.onclick=()=>start(i);sh.appendChild(s);
   });
-  $('play').textContent=Object.keys(save.s).length?'להמשיך':'לנגן';
 }
-function show(id){$('home').hidden=id!=='home';$('game').hidden=id!=='game';$('over').hidden=true;if(id==='game')sizeCanvases()}
+function show(id){
+  ['home','game','studio'].forEach(k=>$(k).hidden=k!==id);['over','press','card'].forEach(k=>$(k).hidden=true);
+  if(id!=='home'){deck=$(id==='studio'?'deck2':'deck');dc=deck.getContext('2d');sizeCanvases()}
+}
 function goHome(){stopRec();stopPlay();stopEngine();G=null;uiq=[];V={mode:'off'};scene=HOME;renderShelf();show('home')}
 function hud(){
   if(!G)return;
@@ -409,16 +483,132 @@ function win(){
   const i=G.i,got=G.lives,last=i===ALBUMS.length-1;
   save.s[i]=Math.max(save.s[i]||0,got);save.b[i]=Math.max(save.b[i]||0,G.score);persist();
   $('ovStars').innerHTML=starStr(got);
-  overlay('נכנס למדף',`ניקוד ${G.score.toLocaleString('he')} · שיא ${save.b[i].toLocaleString('he')}. `+(last?'השלמתם את כל האוסף.':`הבא בתור: ${ALBUMS[i+1].genre}.`),
+  overlay('נכנס למדף',`ניקוד ${G.score.toLocaleString('he')} · שיא ${save.b[i].toLocaleString('he')}. `+(last?'השלמתם את כל האוסף.':`הסגנון ${ALBUMS[i+1].genre} נפתח באולפן.`),
     last?'לנגן שוב':'לתקליט הבא',()=>start(last?i:i+1));
 }
 function lose(){
   V={mode:'off'};$('ovStars').innerHTML='';
   overlay('שריטה','נגמרו שלושת הניסיונות. הריף יתחלף, התקליט נשאר.','לנסות שוב',()=>start(G.i));
 }
-$('play').onclick=()=>start(nextUp());
 $('jam').onclick=()=>start(Math.max(0,nextUp()-(save.s[nextUp()]?0:1)),true);
 $('swap').onclick=()=>start((G.i+1)%ALBUMS.length,true);
+
+/* ---------- the studio: build a song in layers, then press it to vinyl ---------- */
+const LBL=[['נמוך','אמצע','גבוה','הכי גבוה'],['אקורד','נמוך','אמצע','גבוה'],['אקורד','נמוך','אמצע','גבוה'],['בס','סנר','היי־האט','מחיאה']];
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function playNote(m,k,t,v,kit,chord){
+  const r=E.a.root+chord[0];
+  if(m===3){if(k===0)I.kick(t,.5*v);else if(k===1)I.snare(t,.5*v,kit.rev*.6);else if(k===2)I.hat(t,.22*v);else I.clap(t,.4*v)}
+  else if(m===0)I.bass(t,r+[0,7,10,12][k],.5*v,.36);
+  else if(m===2){const n=r+[0,19,22,24][k];if(k)I.guitar(t,r,.3*v,kit,[n,n]);else I.guitar(t,r,.3*v,kit)}
+  else{const n=r+[0,24+chord[1],31,36][k];if(k)I.keys(t,r,.3*v,kit,chord[1],[n]);else I.keys(t,r,.2*v,kit,chord[1])}
+}
+const newSong=()=>({n:'',st:0,kits:[0,0,0,0],L:[[],[],[],[]]});
+const pack=S=>({n:S.n,st:S.st,kits:S.kits.slice(),L:S.L.map(l=>l.map(n=>[n.s,n.k]))});
+function unpack(p){
+  const ok=i=>Number.isInteger(i)&&i>=0&&i<ALBUMS.length?i:0,S=newSong();
+  if(!p)return S;S.n=String(p.n||'').slice(0,22);S.st=ok(p.st);
+  if(Array.isArray(p.kits))S.kits=[0,1,2,3].map(m=>ok(p.kits[m]));
+  if(Array.isArray(p.L))S.L=[0,1,2,3].map(m=>(Array.isArray(p.L[m])?p.L[m]:[]).filter(n=>Array.isArray(n)&&n[0]>=0&&n[0]<8&&n[1]>=0&&n[1]<4).slice(0,16).map(n=>({s:n[0]|0,k:n[1]|0})));
+  return S;
+}
+const NAMES=[['לילה','ניאון','נהר','אבק','קיר','מרתף','ירח','גשם','אור','חלום'],['סגול','חם','איטי','חשמלי','נוזלי','כחול','רחוק','מתוק']];
+const randName=()=>NAMES[0][Math.floor(Math.random()*10)]+' '+NAMES[1][Math.floor(Math.random()*8)];
+function songCover(S){
+  const a=ALBUMS[S.st];let g=`<rect width="100" height="100" fill="${a.label}"/><rect width="100" height="100" fill="#110a18" opacity=".45"/><circle cx="50" cy="44" r="30" fill="none" stroke="#f4eadd" stroke-width="1.5" opacity=".5"/>`;
+  S.L[1].forEach(n=>g+=`<circle cx="${10+n.s*11.4}" cy="${14+(3-n.k)*5}" r="${4+n.k*1.6}" fill="${PADC[1]}"/>`);
+  S.L[0].forEach(n=>g+=`<rect x="${6+n.s*11.2}" y="${86-n.k*8}" width="9.6" height="${14+n.k*8}" fill="${PADC[0]}"/>`);
+  S.L[2].forEach(n=>{const x=11+n.s*11.2,h=10+n.k*6;g+=`<path d="M${x-7} 72L${x} ${72-h}L${x+7} 72Z" fill="${PADC[2]}"/>`});
+  S.L[3].forEach(n=>{const an=-Math.PI/2+TAU*n.s/8,r=[30,30,38,22][n.k];g+=`<circle cx="${(50+Math.cos(an)*r).toFixed(1)}" cy="${(44+Math.sin(an)*r).toFixed(1)}" r="${[6,4.5,2.5,3.5][n.k]}" fill="${PADC[3]}" stroke="#110a18" stroke-width="1.2"/>`});
+  return `<svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${g}<circle cx="50" cy="44" r="9" fill="#f4eadd"/><circle cx="50" cy="44" r="2.5" fill="#110a18"/></svg>`;
+}
+const tabs=[],spads=[];
+PADN.forEach((label,m)=>{
+  const b=document.createElement('button');b.className='pad tab';b.style.setProperty('--glow',PADC[m]);b.setAttribute('aria-label',label);b.innerHTML=face(m);
+  b.onclick=()=>{if(G&&G.studio){G.sel=m;studioUI();say(G.song.L[m].length?'':'תקישו בקצב, והלופ ימשיך לבד')}};$('tabs').appendChild(b);tabs.push(b);
+});
+for(let k=0;k<4;k++){
+  const b=document.createElement('button');b.className='npad';b.style.setProperty('--b',.72+.13*k);
+  b.addEventListener('pointerdown',e=>{e.preventDefault();stap(k)});$('spads').appendChild(b);spads.push(b);
+}
+function flashEl(b){b.classList.add('on');clearTimeout(b._t);b._t=setTimeout(()=>b.classList.remove('on'),170)}
+function studioUI(){
+  const S=G.song,m=G.sel;
+  tabs.forEach((b,i)=>{b.classList.toggle('sel',i===m);b.classList.toggle('has',S.L[i].length>0)});
+  spads.forEach((b,k)=>{b.style.setProperty('--glow',PADC[m]);b.textContent=LBL[m][k]});
+  $('sKit').textContent=`סאונד ${PADN[m]}: ${ALBUMS[S.kits[m]].genre}`;$('sStyle').textContent=`מקצב: ${ALBUMS[S.st].genre}`;
+  if(G.idx==null){if(S.L.some(l=>l.length))save.draft=pack(S);else delete save.draft;persist()}
+}
+function openStudio(S,idx){
+  const a=ALBUMS[S.st];uiq=[];scene=a;G={studio:true,edit:true,song:S,idx,sel:3,a};V={mode:'studio',barStart:0,e:30/a.bpm};
+  show('studio');studioUI();say(S.L.some(l=>l.length)?'ממשיכים':'מתחילים מהתופים');startEngine(a);
+}
+function enterStudio(){if(!audio()){say('אין תמיכה בסאונד בדפדפן הזה');return}openStudio(save.draft?unpack(save.draft):newSong(),null)}
+function studioStep(s,t){
+  const S=G.song,fill=E.cb%4===3;
+  if(s%2===0)ui(t,beat);
+  if(G.edit&&!S.L[3].length&&s%2===0)I.hat(t,s===0?.16:.07);
+  S.L.forEach((L,m)=>{
+    const kit=ALBUMS[S.kits[m]],free=fill&&!(G.edit&&m===G.sel);let hit=false;
+    L.forEach(n=>{
+      if(n.s!==s||n.mute===E.cb)return;
+      const k=free&&m!==3&&Math.random()<.3?Math.floor(Math.random()*4):n.k;
+      playNote(m,k,t,.85,kit,E.chord);hit=true;if(m===G.sel)ui(t,()=>flashEl(spads[n.k]));
+    });
+    if(free&&!hit&&L.length&&s>=4&&Math.random()<.22){playNote(m,L[Math.floor(Math.random()*L.length)].k,t,.6,kit,E.chord);hit=true}
+    if(hit)ui(t,()=>{flashEl(tabs[m]);hitPulse=Math.max(hitPulse,.3)});
+  });
+}
+function stap(k){
+  if(!G||!G.studio||!G.edit||!E)return;audio();
+  const S=G.song,m=G.sel,L=S.L[m];
+  playNote(m,k,ac.currentTime,1,ALBUMS[S.kits[m]],E.chord);flashEl(spads[k]);flashEl(tabs[m]);hitPulse=.8;burstAt(spads[k],PADC[m],8);
+  let st=Math.round((now()-E.barStart)/E.e),bar=E.cb;
+  if(st<0){st+=8;bar--}else if(st>7){st-=8;bar++}
+  if(st<0||st>7)return;
+  let n=L.find(x=>x.s===st&&x.k===k);
+  if(!n){if(L.length>=16){say('השכבה מלאה');return}n={s:st,k};L.push(n);
+    const layers=S.L.filter(l=>l.length).length;if(L.length===1)say(layers<4?'הלופ רץ. אפשר להוסיף עוד נגן':'כל הלהקה מנגנת')}
+  n.mute=bar;studioUI();
+}
+const avail=()=>ALBUMS.map((_,i)=>i).filter(unlocked);
+const cycle=c=>{const a=avail();return a[(a.indexOf(c)+1)%a.length]};
+$('sKit').onclick=()=>{if(avail().length<2)return say('חזרות עם הלהקה פותחות עוד סאונדים');const S=G.song;S.kits[G.sel]=cycle(S.kits[G.sel]);studioUI()};
+$('sStyle').onclick=()=>{
+  if(avail().length<2)return say('חזרות עם הלהקה פותחות עוד מקצבים');
+  const S=G.song,old=S.st;S.st=cycle(old);S.kits=S.kits.map(k=>k===old?S.st:k);S.L.forEach(l=>l.forEach(n=>delete n.mute));
+  G.a=ALBUMS[S.st];scene=G.a;V.e=30/G.a.bpm;V.barStart=0;uiq=[];startEngine(G.a);studioUI();
+};
+$('sUndo').onclick=()=>{G.song.L[G.sel].pop();studioUI()};
+$('sClear').onclick=()=>{G.song.L[G.sel].length=0;studioUI()};
+$('sPress').onclick=()=>{
+  const S=G.song;if(!S.L.some(l=>l.length))return say('קודם מנגנים משהו');
+  $('pressSleeve').innerHTML=songCover(S);$('songName').value=S.n||randName();$('press').hidden=false;
+};
+$('pressBack').onclick=()=>$('press').hidden=true;
+$('pressOk').onclick=()=>{
+  const S=G.song;S.n=$('songName').value.trim().slice(0,22)||randName();
+  if(G.idx!=null)save.my[G.idx]=pack(S);else{save.my.unshift(pack(S));delete save.draft}
+  save.my=save.my.slice(0,30);persist();goHome();
+};
+let cardIdx=0,delArmed=false;
+function cardUI(){$('cardPlay').textContent=G?'■ עצור':'▶ לנגן';$('cardDel').textContent=delArmed?'בטוח? עוד לחיצה מוחקת':'למחוק'}
+function openCard(i){
+  cardIdx=i;delArmed=false;const S=unpack(save.my[i]);
+  $('cardTitle').textContent=S.n;$('cardSleeve').innerHTML=songCover(S);
+  $('cardInfo').textContent=ALBUMS[S.st].genre+' · '+S.L.map((l,m)=>l.length?PADN[m]:'').filter(Boolean).join(', ');
+  $('card').hidden=false;cardUI();
+}
+function stopSong(){stopEngine();G=null;uiq=[];scene=HOME;V={mode:'off'}}
+$('cardPlay').onclick=()=>{
+  if(G)stopSong();
+  else{if(!audio())return;const S=unpack(save.my[cardIdx]);G={studio:true,edit:false,song:S,sel:-1,a:ALBUMS[S.st]};scene=G.a;uiq=[];startEngine(G.a)}
+  cardUI();
+};
+$('cardEdit').onclick=()=>{if(!audio())return;stopSong();openStudio(unpack(save.my[cardIdx]),cardIdx)};
+$('cardDel').onclick=()=>{if(!delArmed){delArmed=true;return cardUI()}save.my.splice(cardIdx,1);persist();goHome()};
+$('cardBack').onclick=goHome;
+$('studioBtn').onclick=enterStudio;$('sBack').onclick=goHome;
 
 /* ---------- recording a jam ---------- */
 let recorder=null,recChunks=[],recBuf=null,recUrl=null,recT0=0,playSrc=null;
@@ -465,7 +655,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&G)goHome()
 /* ---------- visuals: shader light show, record deck, sparks ---------- */
 const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
 let scene=HOME,beatPulse=0,hitPulse=0,spin=0,dpr=Math.min(2,window.devicePixelRatio||1);
-const bg=$('bg'),fx=$('fx'),deck=$('deck'),fxc=fx.getContext('2d'),dc=deck.getContext('2d');
+const bg=$('bg'),fx=$('fx'),fxc=fx.getContext('2d');let deck=$('deck'),dc=deck.getContext('2d');
 let gl=null,U={};
 (function initGL(){
   try{gl=bg.getContext('webgl',{antialias:false,alpha:false})}catch(e){}
@@ -503,9 +693,10 @@ function sizeCanvases(){
 addEventListener('resize',sizeCanvases);
 
 const sparks=[];
-function burst(p,n){
-  if(reduce)return;const r=pads[p].getBoundingClientRect(),x=(r.left+r.width/2)*dpr,y=(r.top+r.height/2)*dpr;
-  for(let k=0;k<n;k++){const a=Math.random()*TAU,s=(2+Math.random()*6)*dpr;sparks.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-2*dpr,l:1,c:PADC[p],r:(2+Math.random()*4)*dpr})}
+function burst(p,n){burstAt(pads[p],PADC[p],n)}
+function burstAt(el,c,n){
+  if(reduce)return;const r=el.getBoundingClientRect(),x=(r.left+r.width/2)*dpr,y=(r.top+r.height/2)*dpr;
+  for(let k=0;k<n;k++){const a=Math.random()*TAU,s=(2+Math.random()*6)*dpr;sparks.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-2*dpr,l:1,c,r:(2+Math.random()*4)*dpr})}
 }
 function drawSparks(){
   fxc.clearRect(0,0,fx.width,fx.height);if(!sparks.length)return;
@@ -527,9 +718,18 @@ function drawDeck(tn){
   x.fillStyle='rgba(17,10,24,.55)';x.fillRect(rr*.1,-rr*.03,rr*.2,rr*.06);
   x.fillStyle='#110a18';x.beginPath();x.arc(0,0,rr*.045,0,TAU);x.fill();x.restore();
   // beat ring: one lap of the needle is one bar
-  const live=V.mode==='resp'||V.mode==='solo';
+  const live=V.mode==='resp'||V.mode==='solo'||V.mode==='studio';
   x.strokeStyle=live?'rgba(244,234,221,.75)':'rgba(244,234,221,.3)';x.lineWidth=2*dpr;x.beginPath();x.arc(0,0,ring,0,TAU);x.stroke();
   for(let s=0;s<8;s++){const a=-Math.PI/2+TAU*s/8,l=s%2?.03:.06;x.beginPath();x.moveTo(Math.cos(a)*ring*(1-l),Math.sin(a)*ring*(1-l));x.lineTo(Math.cos(a)*ring*(1+l),Math.sin(a)*ring*(1+l));x.stroke()}
+  if(V.mode==='studio'&&E&&G&&G.studio){
+    let fr=(tn-V.barStart)/(V.e*8),inner=0;fr-=Math.floor(fr);
+    G.song.L.forEach((L,m)=>{
+      const sel=m===G.sel,base=sel?R*.86:R*(.5+.065*inner++);
+      L.forEach(n=>{const a=-Math.PI/2+TAU*offs(E.a,n.s)/8,rad=sel?base+(n.k-1.5)*R*.03:base;
+        x.beginPath();x.fillStyle=PADC[m];x.globalAlpha=sel?.62+.12*n.k:.9;x.arc(Math.cos(a)*rad,Math.sin(a)*rad,sel?R*.042:R*.024,0,TAU);x.fill()});
+    });
+    x.globalAlpha=1;head(fr);
+  }
   if(V.mode==='call'||V.mode==='resp'){
     const bar=V.e*8,fr=(tn-V.barStart)/bar,good=Math.min(.2,V.e*.8);
     V.phrase.forEach((n,k)=>{
@@ -545,11 +745,12 @@ function drawDeck(tn){
         else{x.fillStyle='rgba(17,10,24,.8)';x.arc(px,py,mr,0,TAU);x.fill();x.strokeStyle=V.blind?'#f4eadd':c;x.stroke()}
       }
     });
-    if(fr>=0&&fr<=1){const a=-Math.PI/2+TAU*fr;x.strokeStyle=live?'#fff':'rgba(255,255,255,.55)';x.lineWidth=3*dpr;x.lineCap='round';
-      x.beginPath();x.moveTo(Math.cos(a)*rr*.4,Math.sin(a)*rr*.4);x.lineTo(Math.cos(a)*ring*1.06,Math.sin(a)*ring*1.06);x.stroke();
-      x.fillStyle='#fff';x.beginPath();x.arc(Math.cos(a)*ring,Math.sin(a)*ring,4*dpr,0,TAU);x.fill()}
+    if(fr>=0&&fr<=1)head(fr);
   }
   x.restore();
+  function head(fr){const a=-Math.PI/2+TAU*fr;x.strokeStyle=live?'#fff':'rgba(255,255,255,.55)';x.lineWidth=3*dpr;x.lineCap='round';
+      x.beginPath();x.moveTo(Math.cos(a)*rr*.4,Math.sin(a)*rr*.4);x.lineTo(Math.cos(a)*ring*1.06,Math.sin(a)*ring*1.06);x.stroke();
+      x.fillStyle='#fff';x.beginPath();x.arc(Math.cos(a)*ring,Math.sin(a)*ring,4*dpr,0,TAU);x.fill()}
 }
 let last=0;
 function frame(ms){
@@ -559,7 +760,7 @@ function frame(ms){
     for(let k=0;k<uiq.length;){if(uiq[k].t<=tn){const f=uiq.splice(k,1)[0].fn;f()}else k++}
     if(G&&G.judge&&!G.fail){const good=Math.min(.2,E?E.e*.8:.2);if(G.judge.targets.some(x=>!x.hit&&tn>x.t+good))miss()}
     if(E)spin+=dt*3.4;
-    if(!$('game').hidden)drawDeck(tn);
+    if(!deck.parentNode.parentNode.hidden)drawDeck(tn);
   }
   beatPulse*=Math.pow(.004,dt);hitPulse*=Math.pow(.02,dt);
   if(gl){
