@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>להקת הקיר</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Karantina:wght@400;700&family=Rubik:wght@400;500;700&display=swap">
+<style>
+/* Layout: one phone screen, top to bottom: status bar, turntable, 2x2 band of wall faces. Home is a record shelf. */
+:root{
+  color-scheme:dark;
+  --wall:#170d22; --wall-hi:#2c1746; --neon:#b56cff; --neon-soft:rgba(181,108,255,.35);
+  --ink:#110a18; --paper:#f4eadd; --muted:#b9a8cc;
+  --blue:#3f7fd6; --pink:#cf5b84; --olive:#8a9a4b; --yellow:#f2bb1f;
+  --wood:#6b4630; --wood-dark:#3d2618; --groove-a:#17111e; --groove-b:#2b2334; --sheen:rgba(255,255,255,.13);
+  --bad:#ff5a4d;
+  --display:"Karantina","Rubik","Arial Hebrew",Arial,sans-serif;
+  --body:"Rubik","Arial Hebrew",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{height:100%;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+body{
+  margin:0;height:100%;overflow:hidden;font-family:var(--body);font-size:16px;color:var(--paper);
+  background:radial-gradient(120% 60% at 50% 0%,var(--wall-hi),var(--wall) 70%) var(--wall);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  -webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;padding:0}
+button:focus-visible{outline:3px solid var(--neon);outline-offset:3px}
+.screen{height:100%;max-width:460px;margin:0 auto;display:flex;flex-direction:column;gap:14px;padding-block:14px;position:relative}
+#mandala{position:fixed;top:-150px;left:50%;width:420px;height:420px;margin-left:-210px;opacity:.16;pointer-events:none;
+  filter:drop-shadow(0 0 12px var(--neon))}
+#mandala *{fill:none;stroke:var(--neon);stroke-width:1.2}
+
+/* home */
+.logo{font-family:var(--display);font-weight:700;font-size:clamp(64px,22vw,104px);line-height:.8;margin:18px 0 0;
+  text-shadow:0 0 22px var(--neon-soft),0 0 2px var(--neon)}
+.sub{color:var(--muted);margin:0;line-height:1.45;max-width:30ch}
+.shelf{flex:1;min-height:0;overflow-y:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:22px 12px;align-content:start;padding-top:6px}
+.slot{display:flex;flex-direction:column;gap:6px;text-align:center;border-bottom:8px solid var(--wood);
+  box-shadow:0 10px 0 -2px var(--wood-dark);padding-bottom:6px}
+.sleeve{aspect-ratio:1;width:100%;border-radius:3px;position:relative;box-shadow:0 4px 14px var(--ink);
+  display:flex;align-items:flex-end;padding:6px;font-family:var(--display);font-size:21px;line-height:.9;color:var(--paper);text-align:start;
+  text-shadow:0 1px 3px var(--ink)}
+.slot.locked .sleeve{filter:grayscale(1) brightness(.4)}
+.stars{font-size:13px;letter-spacing:2px;color:var(--yellow);min-height:17px}
+.slot.locked .stars{color:var(--muted);letter-spacing:0}
+.stars i{font-style:normal;color:var(--muted);opacity:.4}
+.cta{background:var(--neon);color:var(--ink);font-family:var(--display);font-weight:700;font-size:38px;line-height:1;
+  padding:12px 20px 14px;border-radius:999px;box-shadow:0 0 26px var(--neon-soft)}
+.cta:active{transform:scale(.97)}
+.ghost{color:var(--muted);padding:10px;text-decoration:underline;text-underline-offset:4px}
+
+/* game */
+.hud{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.hud h2{font-family:var(--display);font-size:34px;line-height:1;margin:0;font-weight:700;min-width:0}
+.lives{display:flex;gap:5px}
+.lives b{width:16px;height:16px;border-radius:50%;background:radial-gradient(circle,var(--neon) 0 28%,var(--ink) 30%);border:1px solid var(--muted)}
+.lives b.gone{opacity:.2}
+.deck{display:flex;align-items:center;gap:16px}
+.vinyl{flex:0 0 auto;width:min(34vw,150px);aspect-ratio:1;border-radius:50%;position:relative;
+  background:radial-gradient(circle,var(--ink) 0 3%,var(--label,var(--neon)) 3.5% 30%,transparent 30.5%),
+    repeating-radial-gradient(circle,var(--groove-a) 0 2px,var(--groove-b) 2px 3px);
+  box-shadow:0 0 0 3px var(--ink),0 0 30px var(--neon-soft);animation:spin 1.8s linear infinite;animation-play-state:paused}
+.vinyl::after{content:"";position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(transparent 0 40deg,var(--sheen) 60deg,transparent 80deg 220deg,var(--sheen) 240deg,transparent 260deg)}
+.vinyl.on{animation-play-state:running}
+@keyframes spin{to{transform:rotate(360deg)}}
+.say{flex:1;min-width:0}
+.say p{margin:0;font-family:var(--display);font-size:40px;line-height:.95}
+.dots{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.dots b{width:12px;height:12px;border-radius:50%;border:2px solid var(--muted);opacity:.35}
+.dots b.goal{opacity:1}
+.dots b.hit{background:var(--neon);border-color:var(--neon);opacity:1;box-shadow:0 0 8px var(--neon)}
+.band{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:4px;direction:ltr}
+.band.shake{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-8px)}50%{transform:translateX(8px)}75%{transform:translateX(-5px)}}
+.pad{min-height:0;display:flex;align-items:center;justify-content:center;transition:transform .08s,filter .08s;filter:brightness(.78) saturate(.9)}
+.pad svg{height:100%;width:100%;overflow:visible}
+.pad .open{display:none}
+.pad.on{transform:scale(1.07);filter:brightness(1.2) drop-shadow(0 0 16px var(--glow))}
+.pad.on .open{display:block}.pad.on .shut{display:none}
+.band.live .pad{filter:none}
+.band.live .pad.on{filter:brightness(1.2) drop-shadow(0 0 16px var(--glow))}
+
+/* overlay */
+.over{position:fixed;inset:0;z-index:5;background:rgba(17,10,24,.9);display:flex;align-items:center;justify-content:center;
+  padding:24px max(24px,env(safe-area-inset-right,0px)) 24px max(24px,env(safe-area-inset-left,0px))}
+.card{width:100%;max-width:340px;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center}
+.card h3{font-family:var(--display);font-size:64px;line-height:.85;margin:0}
+.card p{margin:0;color:var(--muted);line-height:1.45}
+.card .sleeve{width:170px;font-size:30px;padding:10px}
+.card .stars{font-size:28px}
+@media (prefers-reduced-motion:reduce){.band.shake{animation:none}.pad{transition:none}}
+</style>
+</head>
+<body>
+<svg id="mandala" viewBox="-100 -100 200 200" aria-hidden="true"></svg>
+
+<main class="screen" id="home">
+  <h1 class="logo">להקת<br>הקיר</h1>
+  <p class="sub">ארבעת הפרצופים שעל הקיר מנגנים ריף. חזרו עליו צליל אחרי צליל, ותוסיפו את התקליט למדף.</p>
+  <div class="shelf" id="shelf"></div>
+  <button class="cta" id="play">לנגן</button>
+</main>
+
+<main class="screen" id="game" hidden>
+  <div class="hud">
+    <button class="ghost" id="back">למדף</button>
+    <h2 id="albumName"></h2>
+    <div class="lives" id="lives" aria-label="ניסיונות שנותרו"></div>
+  </div>
+  <div class="deck">
+    <div class="vinyl" id="vinyl"></div>
+    <div class="say"><p id="say" aria-live="polite"></p><div class="dots" id="dots"></div></div>
+  </div>
+  <div class="band" id="band"></div>
+</main>
+
+<div class="over" id="over" hidden>
+  <div class="card">
+    <h3 id="ovTitle"></h3>
+    <div class="sleeve" id="ovSleeve"></div>
+    <div class="stars" id="ovStars"></div>
+    <p id="ovText"></p>
+    <button class="cta" id="ovMain"></button>
+    <button class="ghost" id="ovHome">חזרה למדף</button>
+  </div>
+</div>
+
+<script>
+document.documentElement.lang='he';document.documentElement.dir='rtl';
+const $=id=>document.getElementById(id);
+const midi=m=>440*Math.pow(2,(m-69)/12);
+const ALBUMS=[
+ {name:'בוקר על הנהר', notes:[60,64,67,72], wave:'triangle', tempo:620, len:5, c:['#3d8fc9','#e9d28a','#2c5d4f']},
+ {name:'ניאון סגול',    notes:[57,60,64,67], wave:'sawtooth', tempo:560, len:6, c:['#7a2fd0','#ff7ad9','#241043']},
+ {name:'בלוז של חצות',  notes:[57,60,62,63], wave:'square',   tempo:520, len:7, c:['#1f3a6b','#f2bb1f','#0d1830']},
+ {name:'מנדלה',         notes:[62,63,66,67], wave:'sine',     tempo:480, len:8, c:['#c2562c','#f4eadd','#5c1f3a']},
+ {name:'אבק כוכבים',    notes:[60,65,67,72], wave:'triangle', tempo:430, len:9, c:['#cf5b84','#ffe27a','#3a1c5c']},
+ {name:'הופעה חיה',     notes:[55,59,62,65], wave:'sawtooth', tempo:380, len:10,c:['#8a9a4b','#ff5a4d','#1c2414']},
+];
+const art=a=>`radial-gradient(circle at 68% 34%,${a.c[1]} 0 21%,transparent 22%),linear-gradient(160deg,${a.c[0]},${a.c[2]})`;
+const COLORS=['var(--blue)','var(--pink)','var(--olive)','var(--yellow)'];
+
+/* ---------- saved progress ---------- */
+let stars={};
+try{stars=JSON.parse(localStorage.getItem('wallband')||'{}')||{}}catch(e){}
+const save=()=>{try{localStorage.setItem('wallband',JSON.stringify(stars))}catch(e){}};
+const unlocked=i=>i===0||stars[i-1]>0;
+const nextUp=()=>{const i=ALBUMS.findIndex((_,k)=>!stars[k]);return i<0?ALBUMS.length-1:i};
+const starStr=n=>'★'.repeat(n)+'<i>'+'★'.repeat(3-n)+'</i>';
+
+/* ---------- sound ---------- */
+let ac;
+function audio(){
+  if(!ac){const C=window.AudioContext||window.webkitAudioContext;if(C)ac=new C()}
+  if(ac&&ac.state==='suspended')ac.resume();
+}
+function tone(freq,ms,wave,vol=.22){
+  if(!ac)return;const t=ac.currentTime,d=ms/1000;
+  const g=ac.createGain(),f=ac.createBiquadFilter();f.type='lowpass';f.frequency.value=2600;
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.015);g.gain.exponentialRampToValueAtTime(.001,t+d);
+  [0,6].forEach(det=>{const o=ac.createOscillator();o.type=wave;o.frequency.value=freq;o.detune.value=det;o.connect(f);o.start(t);o.stop(t+d+.05)});
+  f.connect(g).connect(ac.destination);
+}
+function noise(ms,hp,vol){
+  if(!ac)return;const n=ac.sampleRate*ms/1000,b=ac.createBuffer(1,n,ac.sampleRate),d=b.getChannelData(0);
+  for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*(1-i/n);
+  const s=ac.createBufferSource(),f=ac.createBiquadFilter(),g=ac.createGain();s.buffer=b;f.type='highpass';f.frequency.value=hp;g.gain.value=vol;
+  s.connect(f).connect(g).connect(ac.destination);s.start();
+}
+function kick(){
+  if(!ac)return;const t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();
+  o.frequency.setValueAtTime(150,t);o.frequency.exponentialRampToValueAtTime(45,t+.15);
+  g.gain.setValueAtTime(.5,t);g.gain.exponentialRampToValueAtTime(.001,t+.2);o.connect(g).connect(ac.destination);o.start(t);o.stop(t+.22);
+}
+function scratch(){
+  noise(260,900,.35);
+  if(!ac)return;const t=ac.currentTime,o=ac.createOscillator(),g=ac.createGain();o.type='sawtooth';
+  o.frequency.setValueAtTime(320,t);o.frequency.exponentialRampToValueAtTime(60,t+.3);
+  g.gain.setValueAtTime(.18,t);g.gain.exponentialRampToValueAtTime(.001,t+.32);o.connect(g).connect(ac.destination);o.start(t);o.stop(t+.35);
+  if(navigator.vibrate)try{navigator.vibrate(120)}catch(e){}
+}
+
+/* ---------- the four wall faces (original characters) ---------- */
+function face(i){
+  const ink='var(--ink)',c=COLORS[i];
+  const head=`<path d="M18 42Q18 12 50 12Q82 12 82 42L80 78Q78 104 50 104Q22 104 20 78Z" fill="${c}" stroke="${ink}" stroke-width="5" stroke-linejoin="round"/>`;
+  const eyes=`<circle cx="37" cy="54" r="3.6" fill="${ink}"/><circle cx="63" cy="54" r="3.6" fill="${ink}"/>`;
+  const nose=`<path d="M50 58V72H44" fill="none" stroke="${ink}" stroke-width="4"/>`;
+  const mouth=`<path class="shut" d="M40 88H60" stroke="${ink}" stroke-width="4.5" stroke-linecap="round"/><ellipse class="open" cx="50" cy="89" rx="8.5" ry="7.5" fill="${ink}"/>`;
+  const parts=[
+    // blue: heavy side fringe and a beauty-spot
+    head+`<path d="M18 44Q14 8 52 9Q88 10 82 44Q80 26 60 24Q40 40 18 44Z" fill="${ink}"/>`+eyes+nose+`<circle cx="68" cy="80" r="2.2" fill="${ink}"/>`+mouth,
+    // pink: cloud of curls and wrap-around shades
+    [[20,34],[28,18],[44,9],[60,10],[74,20],[81,36]].map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="13" fill="${ink}"/>`).join('')+head+
+      `<path d="M22 46H78V57Q64 64 53 55H47Q36 64 22 57Z" fill="${ink}"/>`+nose+mouth,
+    // olive: long straight hair with a centre parting
+    `<path d="M9 104Q4 6 50 5Q96 6 91 104H76L80 44H20L24 104Z" fill="${ink}"/>`+head+
+      `<path d="M50 12Q46 30 22 40M50 12Q54 30 78 40" fill="none" stroke="${ink}" stroke-width="4"/>`+eyes+nose+
+      `<path d="M37 82Q50 74 63 82" fill="none" stroke="${ink}" stroke-width="5" stroke-linecap="round"/>`+mouth,
+    // yellow: spiky mohawk and a frown
+    `<path d="M34 18L38 -2L44 10L50 -6L56 10L62 -2L66 18Z" fill="${ink}"/>`+head+
+      `<path d="M29 46L44 50M71 46L56 50" stroke="${ink}" stroke-width="4" stroke-linecap="round"/>`+eyes+nose+mouth,
+  ];
+  return `<svg viewBox="-6 -10 112 120" aria-hidden="true">${parts[i]}</svg>`;
+}
+
+/* ---------- screens ---------- */
+const pads=[];
+['כחול','ורוד','ירוק','צהוב'].forEach((label,i)=>{
+  const b=document.createElement('button');b.className='pad';b.style.setProperty('--glow',COLORS[i]);
+  b.setAttribute('aria-label',label);b.innerHTML=face(i);
+  b.addEventListener('pointerdown',e=>{e.preventDefault();tap(i)});
+  $('band').appendChild(b);pads.push(b);
+});
+(function(){let s='';for(let k=0;k<16;k++)s+=`<ellipse rx="22" ry="62" cy="-34" transform="rotate(${k*22.5})"/><ellipse rx="10" ry="30" cy="-34" transform="rotate(${k*22.5+11.25})"/>`;
+  $('mandala').innerHTML=s+'<circle r="96"/><circle r="30"/><circle r="12"/>'})();
+
+function renderShelf(){
+  $('shelf').innerHTML='';
+  ALBUMS.forEach((a,i)=>{
+    const s=document.createElement('button');s.className='slot'+(unlocked(i)?'':' locked');s.disabled=!unlocked(i);
+    s.innerHTML=`<span class="sleeve" style="background:${art(a)}">${a.name}</span><span class="stars">${unlocked(i)?starStr(stars[i]||0):'נעול'}</span>`;
+    s.onclick=()=>{audio();startAlbum(i)};$('shelf').appendChild(s);
+  });
+  $('play').textContent=Object.keys(stars).length?'להמשיך לנגן':'לנגן';
+}
+function show(id){$('home').hidden=id!=='home';$('game').hidden=id!=='game';$('over').hidden=true}
+function goHome(){run++;$('vinyl').classList.remove('on');renderShelf();show('home')}
+
+/* ---------- game ---------- */
+let run=0,G=null;
+const wait=(ms,id)=>new Promise((ok,no)=>setTimeout(()=>id===run?ok():no('stale'),ms));
+const say=t=>$('say').textContent=t;
+function hud(){
+  $('lives').innerHTML=[0,1,2].map(k=>`<b class="${k<G.lives?'':'gone'}"></b>`).join('');
+  $('dots').innerHTML=G.mel.map((_,k)=>`<b class="${k<G.n?'goal':''} ${k<G.pos?'hit':''}"></b>`).join('');
+}
+function flash(p,ms,sound=true){
+  const b=pads[p];b.classList.add('on');if(sound)tone(midi(G.a.notes[p]),ms*1.1,G.a.wave);
+  clearTimeout(b._t);b._t=setTimeout(()=>b.classList.remove('on'),ms*.7);
+}
+function melody(len){
+  const m=[];
+  while(m.length<len){const p=Math.floor(Math.random()*4),k=m.length;if(k>1&&m[k-1]===p&&m[k-2]===p)continue;m.push(p)}
+  return m;
+}
+async function startAlbum(i){
+  const id=++run,a=ALBUMS[i];
+  G={i,a,lives:3,mel:melody(a.len),n:Math.min(2+Math.floor(i/2),4),pos:0,input:false};
+  $('albumName').textContent=a.name;$('vinyl').style.setProperty('--label',a.c[0]);
+  show('game');hud();say('מוכנים?');
+  try{await wait(800,id);await round(id)}catch(e){}
+}
+async function round(id){
+  G.input=false;G.pos=0;hud();say('מקשיבים…');$('band').classList.remove('live');$('vinyl').classList.add('on');
+  await wait(400,id);
+  for(let k=0;k<G.n;k++){flash(G.mel[k],G.a.tempo);await wait(G.a.tempo,id)}
+  $('vinyl').classList.remove('on');$('band').classList.add('live');say('התור שלך');G.input=true;
+}
+async function tap(p){
+  if(!G||!G.input)return;audio();const id=run;
+  try{
+    if(p===G.mel[G.pos]){
+      flash(p,320);G.pos++;hud();
+      if(G.pos<G.n)return;
+      G.input=false;
+      if(G.n===G.mel.length)return win(id);
+      G.n++;say('יפה!');await wait(800,id);await round(id);
+    }else{
+      G.input=false;G.lives--;scratch();flash(p,320,false);hud();
+      $('band').classList.remove('shake');void $('band').offsetWidth;$('band').classList.add('shake');
+      if(!G.lives){say('המחט קפצה');await wait(900,id);return lose()}
+      say('פספוס. שוב מההתחלה');await wait(1200,id);await round(id);
+    }
+  }catch(e){}
+}
+function overlay(title,text,main,fn){
+  $('ovTitle').textContent=title;$('ovText').textContent=text;$('ovMain').textContent=main;$('ovMain').onclick=fn;
+  $('ovSleeve').style.background=art(G.a);$('ovSleeve').textContent=G.a.name;$('over').hidden=false;
+}
+async function win(id){
+  const i=G.i,got=G.lives;stars[i]=Math.max(stars[i]||0,got);save();
+  say('תקליט שלם!');$('vinyl').classList.add('on');$('band').classList.remove('live');
+  const last=i===ALBUMS.length-1;
+  try{
+    await wait(500,id);
+    const t=G.a.tempo*.55;
+    for(let k=0;k<G.mel.length;k++){flash(G.mel[k],t);if(k%2===0)kick();else noise(60,6000,.12);await wait(t,id)}
+    kick();await wait(350,id);
+  }catch(e){return}
+  $('vinyl').classList.remove('on');$('ovStars').innerHTML=starStr(got);
+  overlay('נכנס למדף',last?'השלמתם את כל האוסף. אפשר לחזור לתקליטים ולשפר כוכבים.':'התקליט הבא מהיר יותר, והריף ארוך יותר.',
+    last?'לנגן שוב':'לתקליט הבא',()=>startAlbum(last?i:i+1));
+}
+function lose(){
+  $('ovStars').innerHTML='';
+  overlay('שריטה','נגמרו שלושת הניסיונות. הריף יתחלף, התקליט נשאר.','לנסות שוב',()=>startAlbum(G.i));
+}
+
+$('play').onclick=()=>{audio();startAlbum(nextUp())};
+$('back').onclick=goHome;$('ovHome').onclick=goHome;
+renderShelf();
+</script>
+</body>
+</html>
